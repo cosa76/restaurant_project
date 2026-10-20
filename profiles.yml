@@ -1,0 +1,11 @@
+restaurant:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: restaurant.duckdb
+      threads: 4
+    prod:
+      type: duckdb
+      path: restaurant_prod.duckdb
+      threads: 4

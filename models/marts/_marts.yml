@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: Une ligne par commande, avec axes de temps et clé client.
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: food_item
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_menu_items')
+                field: food_item
+
+  - name: dim_customers
+    description: Une ligne par client (clé dérivée du nom).
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+
+  - name: dim_menu_items
+    description: Une ligne par plat de la carte.
+    columns:
+      - name: food_item
+        data_tests: [unique, not_null]
+
+  - name: agg_daily_sales
+    description: CA et volume par jour.
+    columns:
+      - name: order_date
+        data_tests: [unique, not_null]
+
+  - name: agg_menu_item_sales
+    description: Volume, CA et part du CA par plat.
+    columns:
+      - name: food_item
+        data_tests: [unique]
+
+  - name: agg_payment_method_sales
+    description: Commandes et CA par moyen de paiement.
+    columns:
+      - name: payment_method
+        data_tests: [unique]
+
+  - name: agg_hourly_sales
+    description: Commandes et CA par heure de la journée.
+    columns:
+      - name: order_hour
+        data_tests: [unique]

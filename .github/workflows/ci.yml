@@ -1,0 +1,27 @@
+# CI : sur chaque pull request vers main, on construit et teste
+# tout le projet sur la target dev, dans une base DuckDB jetable.
+name: dbt CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  dbt-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Installer dbt
+        run: pip install -r requirements.txt
+
+      - name: Vérifier la configuration
+        run: dbt debug --profiles-dir . --target dev
+
+      - name: Seed, run et test
+        run: dbt build --profiles-dir . --target dev

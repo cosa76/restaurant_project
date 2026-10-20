@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_restaurant_orders
+    description: Commandes nettoyées, une ligne par commande.
+    columns:
+      - name: order_id
+        description: Identifiant unique de la commande.
+        data_tests: [unique, not_null]
+      - name: customer_name
+        data_tests: [not_null]
+      - name: food_item
+        data_tests: [not_null]
+      - name: category
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['Starter', 'Main', 'Dessert']
+      - name: payment_method
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['Cash', 'Credit Card', 'Debit Card', 'Online Payment']
+      - name: quantity
+        description: Nombre de portions commandées.
+      - name: unit_price
+        description: Prix unitaire du plat.
+      - name: order_amount
+        description: quantity * unit_price.
