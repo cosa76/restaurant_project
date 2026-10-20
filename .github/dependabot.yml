@@ -1,0 +1,12 @@
+# Dependabot ouvre chaque semaine une PR quand une action GitHub ou un
+# paquet Python a une nouvelle version. La CI valide la mise à jour.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly

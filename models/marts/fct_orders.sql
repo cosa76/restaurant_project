@@ -17,7 +17,7 @@ select
     order_amount,
     ordered_at,
     cast(ordered_at as date)           as order_date,
-    date_trunc('month', ordered_at)::date as order_month,
+    cast(date_trunc('month', ordered_at) as date) as order_month,
     dayname(ordered_at)                as order_weekday,
     hour(ordered_at)                   as order_hour
 from orders

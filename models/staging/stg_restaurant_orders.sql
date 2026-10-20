@@ -12,10 +12,10 @@ renamed as (
         "Order ID"                         as order_id,
         trim("Customer Name")              as customer_name,
         trim("Food Item")                  as food_item,
-        trim("Category")                   as category,
+        trim(category)                     as category,
         "Payment Method"                   as payment_method,
-        cast("Quantity" as integer)        as quantity,
-        cast("Price" as decimal(10, 2))    as unit_price,
+        cast(quantity as integer)          as quantity,
+        cast(price as decimal(10, 2))      as unit_price,
         cast("Order Time" as timestamp)    as ordered_at
     from source
 
