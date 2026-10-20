@@ -1,0 +1,3 @@
+# Fins de ligne LF pour tous les fichiers texte, quel que soit l OS.
+# Évite les CSV mixtes LF/CRLF que DuckDB ne sait pas lire.
+* text=auto eol=lf
