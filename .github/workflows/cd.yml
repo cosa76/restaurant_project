@@ -1,5 +1,6 @@
-# CD : à chaque merge sur main, on construit la target prod,
-# puis on publie la base DuckDB et la doc dbt comme artefacts.
+# CD : à chaque merge sur main, on déploie d'abord en uat, puis en prod
+# après approbation manuelle (règle "Required reviewers" de l'environnement
+# production dans GitHub). La base et la doc sont publiées en artefacts.
 name: dbt CD
 
 on:
@@ -7,9 +8,39 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Un seul déploiement à la fois : un nouveau merge attend la fin du précédent.
+concurrency:
+  group: dbt-deploy
+  cancel-in-progress: false
+
 jobs:
-  dbt-deploy:
+  deploy-uat:
     runs-on: ubuntu-latest
+    environment: uat
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Installer dbt
+        run: pip install -r requirements.txt
+
+      - name: Build uat
+        run: dbt build --profiles-dir . --target uat
+
+      - name: Publier la base uat
+        uses: actions/upload-artifact@v4
+        with:
+          name: restaurant_uat-duckdb
+          path: restaurant_uat.duckdb
+
+  deploy-prod:
+    needs: deploy-uat
+    runs-on: ubuntu-latest
+    environment: production
     steps:
       - uses: actions/checkout@v4
 
