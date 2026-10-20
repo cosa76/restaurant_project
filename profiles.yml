@@ -9,3 +9,7 @@ restaurant:
       type: duckdb
       path: restaurant_prod.duckdb
       threads: 4
+    uat:
+      type: duckdb
+      path: restaurant_uat.duckdb
+      threads: 4
