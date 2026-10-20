@@ -1,0 +1,15 @@
+[sqlfluff]
+dialect = duckdb
+templater = jinja
+max_line_length = 100
+# Alias alignés en colonne et clés en tête de select : choix de lisibilité du projet.
+exclude_rules = layout.spacing, structure.column_order
+
+[sqlfluff:templater:jinja]
+apply_dbt_builtins = True
+
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.functions]
+extended_capitalisation_policy = lower

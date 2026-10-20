@@ -3,10 +3,19 @@ version: 2
 models:
   - name: fct_orders
     description: Une ligne par commande, avec axes de temps et clé client.
+    # Contrat : dbt refuse de construire la table si une colonne manque,
+    # change de nom ou de type. Protège les tableaux de bord en aval.
+    config:
+      contract:
+        enforced: true
     columns:
       - name: order_id
-        data_tests: [unique, not_null]
+        data_type: integer
+        constraints:
+          - type: not_null
+        data_tests: [unique]
       - name: customer_id
+        data_type: varchar
         data_tests:
           - not_null
           - relationships:
@@ -14,11 +23,38 @@ models:
                 to: ref('dim_customers')
                 field: customer_id
       - name: food_item
+        data_type: varchar
         data_tests:
           - relationships:
               arguments:
                 to: ref('dim_menu_items')
                 field: food_item
+      - name: category
+        data_type: varchar
+      - name: payment_method
+        data_type: varchar
+      - name: quantity
+        data_type: integer
+        data_tests: [positive]
+      - name: unit_price
+        data_type: decimal(10, 2)
+        data_tests: [positive]
+      - name: order_amount
+        data_type: decimal(12, 2)
+        data_tests: [positive]
+      - name: ordered_at
+        data_type: timestamp
+        data_tests:
+          - not_null
+          - not_in_future
+      - name: order_date
+        data_type: date
+      - name: order_month
+        data_type: date
+      - name: order_weekday
+        data_type: varchar
+      - name: order_hour
+        data_type: bigint
 
   - name: dim_customers
     description: Une ligne par client (clé dérivée du nom).

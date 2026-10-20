@@ -1,12 +1,33 @@
-# CI : sur chaque pull request vers main, on construit et teste
-# tout le projet sur la target dev, dans une base DuckDB jetable.
+# CI : sur chaque pull request vers main, deux jobs en parallèle.
+# sql-lint vérifie le style SQL, dbt-build construit et teste tout
+# le projet sur la target dev, dans une base DuckDB jetable.
 name: dbt CI
 
 on:
   pull_request:
     branches: [main]
 
+# Le jeton GitHub du run n'a besoin que de lire le code.
+permissions:
+  contents: read
+
 jobs:
+  sql-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Installer sqlfluff
+        run: pip install -r requirements-dev.txt
+
+      - name: Linter le SQL
+        run: sqlfluff lint models tests
+
   dbt-build:
     runs-on: ubuntu-latest
     steps:
